@@ -69,14 +69,15 @@ class Base(object):
         if float(mapping.redfish_version) < 1.00:
             links = getattr(self.data, mapping.redfish_mapper.map_links())
             if link_type in links:
-                link = str(links[link_type][mapping.redfish_mapper.map_links_ref()])
-                return urljoin(self.url, link)
+                link = str(links[link_type][
+                    mapping.redfish_mapper.map_links_ref()])
+                return urljoin(str(self.url), link)
 
             raise AttributeError
         else:
             links = getattr(self.data, link_type)
             link = str(getattr(links, mapping.redfish_mapper.map_links_ref()))
-            return urljoin(self.url, link)
+            return urljoin(str(self.url), link)
 
     @property
     def url(self):
@@ -163,7 +164,7 @@ class BaseCollection(Base):
             # self.links.append(getattr(link,'@odata.id'))
             # self.links.append(getattr(link,'href'))
             l = str(getattr(link, mapping.redfish_mapper.map_links_ref()))
-            self.links.append(urljoin(self.url, l))
+            self.links.append(urljoin(str(self.url), l))
 
         config.logger.debug(self.links)
 
@@ -403,9 +404,9 @@ class Managers(Device):
         '''
         # Craft the request
         link = getattr(self.data.Actions, "#Manager.Reset")
-        link = link.target
+        link = str(link.target)
 
-        reset_url = urljoin(self.url, link)
+        reset_url = urljoin(str(self.url), link)
 
         response = requests.post(
             reset_url,
