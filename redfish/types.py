@@ -69,13 +69,13 @@ class Base(object):
         if float(mapping.redfish_version) < 1.00:
             links = getattr(self.data, mapping.redfish_mapper.map_links())
             if link_type in links:
-                return urljoin(
-                    self.url,
-                    links[link_type][mapping.redfish_mapper.map_links_ref()])
+                link = str(links[link_type][mapping.redfish_mapper.map_links_ref()])
+                return urljoin(self.url, link)
+
             raise AttributeError
         else:
             links = getattr(self.data, link_type)
-            link = getattr(links, mapping.redfish_mapper.map_links_ref())
+            link = str(getattr(links, mapping.redfish_mapper.map_links_ref()))
             return urljoin(self.url, link)
 
     @property
@@ -162,9 +162,8 @@ class BaseCollection(Base):
         for link in linksmembers:
             # self.links.append(getattr(link,'@odata.id'))
             # self.links.append(getattr(link,'href'))
-            self.links.append(urljoin(
-                self.url, getattr(
-                    link, mapping.redfish_mapper.map_links_ref())))
+            l = str(getattr(link, mapping.redfish_mapper.map_links_ref()))
+            self.links.append(urljoin(self.url, l))
 
         config.logger.debug(self.links)
 
