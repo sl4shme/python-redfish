@@ -281,7 +281,7 @@ class RedfishConnection(object):
         # Handle login with redfish 1.00, url must be :
         # /rest/v1/SessionService/Sessions as specified by the specification
         if float(mapping.redfish_version) >= 1.00:
-            url = urljoin(url, "Sessions")
+            url = urljoin(str(url), str("Sessions"))
 
         # Craft request body and header
         requestBody = {"UserName": self.connection_parameters.user_name,
